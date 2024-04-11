@@ -53,14 +53,14 @@ func run(cctx *cli.Context) {
 	logger.Init(*logicLogFile)
 
 	if env != "local" {
-		nacosConf, err := config.NewNacosConfig(cctx)
+		naConf, err := config.NewNaConfig(cctx)
 		if err != nil {
 			log.Fatal("Read config error:", err)
 		}
 		//load config
-		err = config.LoadFromNacos(nacosConf)
+		err = config.LoadFromNacos(naConf)
 		if err != nil {
-			log.Fatal("Load nacos config error:", err)
+			log.Fatal("Load na config error:", err)
 		}
 	} else {
 		err := config.LoadConf(*configPath)

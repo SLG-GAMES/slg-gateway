@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.0
-	github.com/nacos-group/nacos-sdk-go/v2 v2.2.1
 	github.com/sirupsen/logrus v1.9.1
 	github.com/spf13/viper v1.15.0
 	github.com/urfave/cli v1.22.13
@@ -13,7 +12,6 @@ require (
 )
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1704 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/bytedance/sonic v1.8.0 // indirect

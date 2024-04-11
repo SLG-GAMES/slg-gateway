@@ -10,10 +10,6 @@ import (
 	"sync"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/nacos-group/nacos-sdk-go/v2/clients"
-	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
-	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
-	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
@@ -70,7 +66,7 @@ type NacosConfig struct {
 var (
 	configMutex  = sync.RWMutex{}
 	config       Config
-	nacos        NacosConfig
+	na           NaConfig
 	configClient config_client.IConfigClient
 	configViper  *viper.Viper
 )
@@ -143,28 +139,28 @@ func NewNacosConfig(cctx *cli.Context) (*viper.Viper, error) {
 	configViper = viper.New()
 	configViper.SetConfigType("yaml")
 
-	log.Println("read config from nacos")
+	log.Println("read config from na")
 
 	group := cctx.String("Group")
 	DataIds := cctx.String("DataIds")
 	NacosAddrs := cctx.String("NacosAddrs")
 	NacosAddrsList := strings.Split(NacosAddrs, ",")
 	ServerConfigs := make([]constant.ServerConfig, len(NacosAddrsList))
-	nacos.ServerConfigs = ServerConfigs
-	nacos.Group = group
+	na.ServerConfigs = ServerConfigs
+	na.Group = group
 	for i, addr := range NacosAddrsList {
 		addrArray := strings.Split(addr, ":")
 		intNum, _ := strconv.Atoi(addrArray[1])
-		nacos.ServerConfigs[i] = constant.ServerConfig{
+		na.ServerConfigs[i] = constant.ServerConfig{
 			Scheme:      "http",
-			ContextPath: "/nacos",
+			ContextPath: "/na",
 			IpAddr:      addrArray[0],
 			Port:        uint64(intNum),
 		}
 	}
 	NamespaceId := cctx.String("NamespaceId")
 	NacosLogLevel := cctx.String("NacosLogLevel")
-	nacos.ClientConfig = constant.ClientConfig{
+	na.ClientConfig = constant.ClientConfig{
 		NamespaceId:         NamespaceId,
 		LogLevel:            NacosLogLevel,
 		NotLoadCacheAtStart: true,
@@ -199,8 +195,8 @@ func GetConfigByDataId(DataId string) (string, error) {
 	if configClient == nil {
 		cli, err := clients.CreateConfigClient(
 			map[string]interface{}{
-				"clientConfig":  nacos.ClientConfig,
-				"serverConfigs": nacos.ServerConfigs,
+				"clientConfig":  na.ClientConfig,
+				"serverConfigs": na.ServerConfigs,
 			},
 		)
 		if err != nil {
@@ -210,7 +206,7 @@ func GetConfigByDataId(DataId string) (string, error) {
 	}
 	content, err := configClient.GetConfig(vo.ConfigParam{
 		DataId: DataId,
-		Group:  nacos.Group})
+		Group:  na.Group})
 	return content, err
 }
 
