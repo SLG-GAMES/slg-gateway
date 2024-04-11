@@ -1,0 +1,11 @@
+ServerConfig:
+  RunMode: info
+  TargetURL: http://127.0.0.1:8889  ##业务逻辑服务器的IP
+  HttpPort: '8888' ##网关服务对外端口
+  ReadTimeout: 0
+  WriteTimeout: 0
+  LogOut: stdout
+MiddlewareLogConfig:
+  VisitLogFile: ./log/visit.log
+  RecoverLogFile: ./log/recover.log
+  SkipPath: []
